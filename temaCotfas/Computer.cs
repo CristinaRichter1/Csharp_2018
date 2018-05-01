@@ -55,6 +55,22 @@ namespace temaCsharp
             }
         }
 
+        public void removeComponent(Component c0)
+        {
+            foreach (Component c1 in components)
+            {
+                if (c0 == c1)
+                {
+                    components.Remove(c1);
+                }
+            }
+        }
+
+        public void removeComponent(int index)
+        {
+            components.RemoveAt(index);
+        }
+
         public List<Component> getComponents()
         {
             return components;
@@ -85,7 +101,7 @@ namespace temaCsharp
             retval += "Components: \r\n";
             foreach (Component component in components)
             {
-                retval += "\t-" + component.ToString(true) + ";\r\n";
+                retval += "\t- " + component.ToString(true) + ";\r\n";
             }
 
             return retval;

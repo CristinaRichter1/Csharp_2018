@@ -21,6 +21,7 @@ namespace temaCsharp
             session = new HardwareSessionManager();
             InitializeComponent();
             updateState();
+            treeView1.ExpandAll();
         }
 
         public Form1(HardwareSessionManager hsm)
@@ -29,6 +30,7 @@ namespace temaCsharp
             InitializeComponent();
             // populate everything with the proper data from state
             updateState();
+            treeView1.ExpandAll();
         }
 
         private void updateState()
@@ -200,7 +202,21 @@ namespace temaCsharp
 
         private void button6_Click(object sender, EventArgs e)
         {
+            // if we have a pc 
+            if (treeView1.Nodes.Count > 0)
+            {
+                // if we have selected a node
+                if (treeView1.SelectedNode != null)
+                {
+                    // TODO::fix the situation where we select a pc node
+                    List<int> ls = HardwareUtil.getAddrOfNode(treeView1.SelectedNode);
 
+                    treeView1.Nodes.Remove(treeView1.SelectedNode);
+
+                    session.computers[ls[1]].removeComponent(ls[0]);
+                    treeView1.ExpandAll();
+                }
+            }
         }
 
         private void button8_Click(object sender, EventArgs e)

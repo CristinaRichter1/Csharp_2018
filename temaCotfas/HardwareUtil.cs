@@ -14,6 +14,11 @@ using System.Windows.Forms;
  */
 namespace temaCsharp
 {
+    enum Loglevel {
+        general,
+        error
+    }
+
     class HardwareUtil
     {
         // common interactivity functions
@@ -63,6 +68,26 @@ namespace temaCsharp
                 Console.WriteLine(li + ", ");
             }
             Console.WriteLine("]");
+        }
+
+        // logging functions
+        public static void log(Loglevel level, String logText)
+        {
+            String log = "";
+            log += "DATE: " + DateTime.Now.ToString();
+
+            if (level == Loglevel.general)
+            {
+                log += " LEVEL: GENERAL ";
+            } else if (level == Loglevel.error)
+            {
+                log += " LEVEL: ERROR ";
+            }
+           
+            log += logText + "\r\n";
+
+            String path = "./hardware.log";
+            // TODO :: append the text to log file
         }
 
     }

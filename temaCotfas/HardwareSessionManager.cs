@@ -62,7 +62,7 @@ namespace temaCsharp
                 report += "- " + component.ToString(true) + "\r\n";
             }
             report += "\r\n\r\n";
-            report += "Your components:\r\n";
+            report += "Your PCs:\r\n";
             foreach (Computer computer in computers)
             {
                 report += computer.ToString(true);
@@ -70,7 +70,7 @@ namespace temaCsharp
             report += "\r\n\r\n";
             report += "In total you have " + computers.Count + " PCs and " + components.Count + " components.";
             report += "\r\n\r\n";
-            report += "*****************************************************************************************";
+            report += "********************************************************************************";
             return report;
         }
     }

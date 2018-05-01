@@ -60,6 +60,12 @@ namespace temaCsharp
             retval += "Platform: " + Platform + "; ";
             return retval;
         }
+
+        public bool Equals(Component comp)
+        {
+            return (String.Equals(Name, comp.Name) && String.Equals(Platform, comp.Platform));
+        }
+       
         #endregion
     }
 }

@@ -40,9 +40,16 @@ namespace temaCsharp
             Application.SetCompatibleTextRenderingDefault(false);
 
             // Inject the retrieved session manager into the application 
-            // TODO:: refactor and handle case in which session.bin was deleted
             HardwareSessionManager savedSession = new HardwareSessionManager();
-            savedSession.retrieveState("session.bin");
+            try
+            {
+                savedSession.retrieveState("session.bin");
+            } catch (Exception e)
+            {
+                // we catch exception and log it but we don't tell the user
+                HardwareUtil.log(Loglevel.error, e.StackTrace);
+            }
+
             Form1 f = new Form1(savedSession);
             Application.Run(f);
             // save session to file -- should allow saving to db as well for future use

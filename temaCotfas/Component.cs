@@ -10,6 +10,7 @@ using System.Threading.Tasks;
  */
 namespace temaCsharp
 {
+    [Serializable]
     public class Component
     {
         #region props

@@ -14,6 +14,7 @@ using System.Threading.Tasks;
  */
 namespace temaCsharp
 {
+    [Serializable]
     public class HardwareSessionManager
     {
         public List<Computer> computers;
@@ -26,26 +27,51 @@ namespace temaCsharp
             components = new List<Component>();
         }
 
-        public static void saveState(HardwareSessionManager stateManager, String filename)
+        public void saveState(String filename)
         {
             IFormatter formatter = new BinaryFormatter();
             Stream stream = new FileStream(filename,
                                      FileMode.Create,
                                      FileAccess.Write, FileShare.None);
-            formatter.Serialize(stream, stateManager);
+            formatter.Serialize(stream, this);
             stream.Close();
         }
 
-        public static HardwareSessionManager retrieveState(String filename)
+        public void retrieveState(String filename)
         {
             IFormatter formatter = new BinaryFormatter();
             HardwareSessionManager stateManager = null;
             Stream stream = new FileStream(filename,
-                                     FileMode.Create,
+                                     FileMode.Open,
                                      FileAccess.Read, FileShare.None);
             stateManager = (HardwareSessionManager)formatter.Deserialize(stream);
             stream.Close();
-            return stateManager;
+            this.components = stateManager.components;
+            this.computers = stateManager.computers;
+        }
+
+        public String getReportAsString()
+        {
+            String report = "";
+            report += "*************************** Hardware store report ***************************\r\n";
+            report += "************************* DATE: " + DateTime.Now.ToString() + "*************************\r\n";
+            report += "\r\n\r\n";
+            report += "Your components:\r\n";
+            foreach (Component component in components)
+            {
+                report += "- " + component.ToString(true) + "\r\n";
+            }
+            report += "\r\n\r\n";
+            report += "Your components:\r\n";
+            foreach (Computer computer in computers)
+            {
+                report += computer.ToString(true);
+            }
+            report += "\r\n\r\n";
+            report += "In total you have " + computers.Count + " PCs and " + components.Count + " components.";
+            report += "\r\n\r\n";
+            report += "*****************************************************************************************";
+            return report;
         }
     }
 }

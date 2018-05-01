@@ -50,6 +50,16 @@ namespace temaCsharp
             retval += "}";
             return retval;
         }
+
+        public String ToString(Boolean pretty)
+        {
+            String retval = "";
+            retval += "Component: ";
+            retval += "ID: " + ID + "; ";
+            retval += "Name: " + Name + "; ";
+            retval += "Platform: " + Platform + "; ";
+            return retval;
+        }
         #endregion
     }
 }

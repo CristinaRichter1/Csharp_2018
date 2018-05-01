@@ -206,6 +206,7 @@
             this.button8.TabIndex = 14;
             this.button8.Text = "Save as TXT";
             this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
             // 
             // Form1
             // 

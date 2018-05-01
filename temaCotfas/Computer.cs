@@ -55,6 +55,11 @@ namespace temaCsharp
             }
         }
 
+        public List<Component> getComponents()
+        {
+            return components;
+        }
+
         public override String ToString()
         {
             String retval = "";
@@ -68,6 +73,21 @@ namespace temaCsharp
             }
             retval += "]";
             retval += "}";
+            return retval;
+        }
+
+        public String ToString(Boolean pretty)
+        {
+            String retval = "";
+            retval += "Computer :\r\n";
+            retval += "ID: " + ID + ";\r\n";
+            retval += "Platform: " + Platform + ";\r\n";
+            retval += "Components: \r\n";
+            foreach (Component component in components)
+            {
+                retval += "\t-" + component.ToString(true) + ";\r\n";
+            }
+
             return retval;
         }
         #endregion

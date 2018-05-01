@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,13 +20,44 @@ namespace temaCsharp
         {
             session = new HardwareSessionManager();
             InitializeComponent();
+            updateState();
         }
 
         public Form1(HardwareSessionManager hsm)
         {
             session = hsm;
             InitializeComponent();
+            // populate everything with the proper data from state
+            updateState();
         }
+
+        private void updateState()
+        {
+            if (session.components.Count > 0)
+            {
+                foreach (Component component in session.components)
+                {
+                    listBox1.Items.Add(component.Name);
+                }
+            }
+
+            if (session.computers.Count() > 0)
+            {
+                int i = treeView1.Nodes.Count;
+                foreach (Computer computer in session.computers)
+                {
+                    treeView1.Nodes.Add("PC " + computer.ID.ToString());
+                    List<Component> components = computer.getComponents();
+                    foreach (Component component in components)
+                    {
+                        treeView1.Nodes[i].Nodes.Add(component.Name);
+                    }
+                    i++;
+                }
+            }
+        }
+
+        // Event handlers
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -169,6 +201,30 @@ namespace temaCsharp
         private void button6_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            Stream stream;
+            SaveFileDialog sfd = new SaveFileDialog();
+
+            sfd.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+            sfd.FilterIndex = 2;
+            sfd.RestoreDirectory = true;
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                if ((stream = sfd.OpenFile()) != null)
+                {
+                    String path   = Path.GetFullPath(sfd.FileName);
+                    String report = session.getReportAsString();
+
+                    // Close the stream as the process will be unable to write to 
+                    // it with WriteAllText while opened as stream
+                    stream.Close();
+                    File.WriteAllText(path, report);
+                }
+            }
         }
     }
 }

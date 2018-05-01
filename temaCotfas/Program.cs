@@ -39,14 +39,14 @@ namespace temaCsharp
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            //Boolean ans = CompatibilityManager.isCompatible(new Component(1, "GTX 9900", "PC"), new Component(2, "FX 8700", "PC"));
-            //Console.WriteLine("Answer is " + ans);
-            //Computer comp = new Computer(1, "AMD", new Component[] { new Component(1, "GTX 9900", "PC"), new Component(2, "FX 8700", "PC") });
-            //Console.WriteLine(comp);
-
-            Form1 f = new Form1();
-
+            // Inject the retrieved session manager into the application 
+            // TODO:: refactor and handle case in which session.bin was deleted
+            HardwareSessionManager savedSession = new HardwareSessionManager();
+            savedSession.retrieveState("session.bin");
+            Form1 f = new Form1(savedSession);
             Application.Run(f);
+            // save session to file -- should allow saving to db as well for future use
+            f.session.saveState("session.bin");
         }
     }
 }

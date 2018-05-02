@@ -21,10 +21,14 @@ namespace temaCsharp
 
         public List<Component> components;
 
+        public List<String> platforms;
+
         public HardwareSessionManager()
         {
             computers  = new List<Computer>();
             components = new List<Component>();
+            // hardcoded for now...
+            platforms = new List<String>(){"AMD", "ARM", "INTEL", "SPARC"};
         }
 
         public void saveState(String filename)

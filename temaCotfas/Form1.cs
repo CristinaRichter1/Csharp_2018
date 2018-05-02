@@ -41,6 +41,12 @@ namespace temaCsharp
                 {
                     listBox1.Items.Add(component.Name);
                 }
+
+                foreach (String platform in session.platforms)
+                {
+                    comboBox1.Items.Add(platform);
+                }
+
             }
 
             if (session.computers.Count() > 0)
@@ -190,6 +196,7 @@ namespace temaCsharp
         private void button5_Click(object sender, EventArgs e)
         {
             int currentIndex = treeView1.Nodes.Count + 1;
+            
             Computer c = new Computer(currentIndex, "INTEL", new List<Component>());
             session.computers.Add(c);
             treeView1.Nodes.Add("PC " + c.ID.ToString());
@@ -208,13 +215,26 @@ namespace temaCsharp
                     // if we have selected a node
                     if (treeView1.SelectedNode != null)
                     {
-                        // TODO:: test compatibility before assignment
                         // this is done poorly but works for now
                         List<int> ls = HardwareUtil.getAddrOfNode(treeView1.SelectedNode);
-                        //HardwareUtil.printList(ls);
+                
                         // Add a node to tree and add its associated component to the session
-                        treeView1.Nodes[ls[0]].Nodes.Add(session.components[selectedComponent].Name);
-                        session.computers[ls[0]].addComponent(session.components[selectedComponent]);
+                        if (HardwareCompatibilityManager.isCompatible(session.components[selectedComponent], session.computers[ls[0]]))
+                        {
+                            treeView1.Nodes[ls[0]].Nodes.Add(session.components[selectedComponent].Name);
+                            session.computers[ls[0]].addComponent(session.components[selectedComponent]);
+                        }
+                        else {
+                            String msg = String.Format(
+                                "Component `{0}` (platform `{1}`) is not compatible with PC {2} (platform `{3}`).",
+                                session.components[selectedComponent].Name,
+                                session.components[selectedComponent].Platform,
+                                session.computers[ls[0]].ID,
+                                session.computers[ls[0]].Platform
+                                );
+
+                            HardwareUtil.compatibilityAlert(msg);
+                        }
                         treeView1.ExpandAll();
                     }
                 }

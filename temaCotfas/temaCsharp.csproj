@@ -61,7 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CompatibilityManager.cs" />
+    <Compile Include="HardwareCompatibilityManager.cs" />
     <Compile Include="Component.cs" />
     <Compile Include="Computer.cs" />
     <Compile Include="Form1.cs">

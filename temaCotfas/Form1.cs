@@ -163,8 +163,28 @@ namespace temaCsharp
 
         private void button3_Click(object sender, EventArgs e)
         {
-            int selectedComponent = listBox1.SelectedIndex;
-            Console.WriteLine(selectedComponent);
+            // if we have a pc 
+            if (treeView1.Nodes.Count > 0)
+            {
+                // if we have selected a component
+                int selectedIndex = listBox1.SelectedIndex;
+                if (selectedIndex > -1)
+                {
+                    // if we have selected a node
+                    if (treeView1.SelectedNode != null)
+                    {
+                        Component selectedComponent = session.components[selectedIndex];
+                        List<int> ls = HardwareUtil.getAddrOfNode(treeView1.SelectedNode);
+
+                        if (HardwareCompatibilityManager.isCompatible(selectedComponent, session.computers[ls[0]]))
+                        {
+                            HardwareUtil.compatibilityInfo("The component is compatible!");
+                        } else {
+                            HardwareUtil.compatibilityInfo("The component is not compatible.");
+                        }
+                    }
+                }
+            }
         }
 
         private void button5_Click(object sender, EventArgs e)
@@ -188,6 +208,7 @@ namespace temaCsharp
                     // if we have selected a node
                     if (treeView1.SelectedNode != null)
                     {
+                        // TODO:: test compatibility before assignment
                         // this is done poorly but works for now
                         List<int> ls = HardwareUtil.getAddrOfNode(treeView1.SelectedNode);
                         //HardwareUtil.printList(ls);
@@ -208,12 +229,17 @@ namespace temaCsharp
                 // if we have selected a node
                 if (treeView1.SelectedNode != null)
                 {
-                    // TODO::fix the situation where we select a pc node
+                    // refactor when possible
                     List<int> ls = HardwareUtil.getAddrOfNode(treeView1.SelectedNode);
-
-                    treeView1.Nodes.Remove(treeView1.SelectedNode);
-
-                    session.computers[ls[1]].removeComponent(ls[0]);
+                    if (ls.Count > 1)
+                    {
+                        treeView1.Nodes.Remove(treeView1.SelectedNode);
+                        session.computers[ls[1]].removeComponent(ls[0]);
+                    }
+                    else {
+                        treeView1.Nodes.Remove(treeView1.SelectedNode);
+                        session.computers.Remove(session.computers[ls[0]]);
+                    }
                     treeView1.ExpandAll();
                 }
             }
@@ -225,8 +251,9 @@ namespace temaCsharp
             SaveFileDialog sfd = new SaveFileDialog();
 
             sfd.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
-            sfd.FilterIndex = 2;
+            sfd.FilterIndex = 1;
             sfd.RestoreDirectory = true;
+            sfd.FileName = "report.txt";
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {

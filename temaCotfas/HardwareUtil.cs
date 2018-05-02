@@ -14,6 +14,7 @@ using System.Windows.Forms;
  */
 namespace temaCsharp
 {
+    // log levels
     enum Loglevel {
         general,
         error
@@ -30,6 +31,16 @@ namespace temaCsharp
         public static void error(String msg)
         {
             MessageBox.Show(msg, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        public static void compatibilityInfo(String msg)
+        {
+            MessageBox.Show(msg, "Compatibility information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        public static void compatibilityAlert(String msg)
+        {
+            MessageBox.Show(msg, "Compatibility alert", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         }
 
         // utility functions 
@@ -70,7 +81,7 @@ namespace temaCsharp
             Console.WriteLine("]");
         }
 
-        // logging functions
+        // logging function
         public static void log(Loglevel level, String logText)
         {
             String log = "";
@@ -84,10 +95,14 @@ namespace temaCsharp
                 log += " LEVEL: ERROR ";
             }
            
-            log += logText + "\r\n";
+            log += logText;
 
             String path = "./hardware.log";
-            // TODO :: append the text to log file
+
+            using (StreamWriter sw = File.AppendText(path))
+            {
+                sw.WriteLine( log );
+            }
         }
 
     }

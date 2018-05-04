@@ -12,7 +12,7 @@ using System.Windows.Forms;
  * Utility/shared/helper functions go here 
  * 
  */
-namespace temaCsharp
+namespace temaCsharp.Util
 {
     // log levels
     enum Loglevel {

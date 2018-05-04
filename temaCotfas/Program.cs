@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using temaCsharp.Util;
+
 /*
  * Subject 35: Hardware
  * Classes to implement:
@@ -24,6 +26,17 @@ using System.Windows.Forms;
  * 5. Add the option to export a report as a txt file
  * 6. Use the various menu controls (MenuStrip, ToolStrip, StatusStrip, ContextMenuStrip)
  *
+ * PHASE II:
+ * 7. Draw a chart (don't use the chart control ;) ) in order to represent some statistics that are meaningful for your app 
+ * 8. Offer the possibility to print a document (with PrintPreview)
+ * 9. Implement the drag & drop functionality
+ * 
+ * PHASE III:
+ * 10. Use a relational database in order to persist data (for at least two different entities / classes) in your app
+ * 11. Implement a UserControl (so that it can be distributed to other developers) in a separate project and use it in your 
+ * app. The UserControl should provide a useful functionality for your app (please don't copy&paste a clock usercontrol from 
+ * the internet ;) )
+ * 
  */
 
 namespace temaCsharp

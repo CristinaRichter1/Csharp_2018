@@ -7,12 +7,14 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 
+using temaCsharp.Entities;
+
 /*
  * Represents the `workspace` in which the app runs -- I felt the need to use 
  * a separate class from the Form to deal with state
  * 
  */
-namespace temaCsharp
+namespace temaCsharp.Util
 {
     [Serializable]
     public class HardwareSessionManager
@@ -21,13 +23,14 @@ namespace temaCsharp
 
         public List<Component> components;
 
+        [NonSerialized]
         public List<String> platforms;
 
         public HardwareSessionManager()
         {
             computers  = new List<Computer>();
             components = new List<Component>();
-            // hardcoded for now...
+            // hardcoded for now, do not serialize
             platforms = new List<String>(){"AMD", "ARM", "INTEL", "SPARC"};
         }
 
@@ -51,7 +54,7 @@ namespace temaCsharp
             stateManager = (HardwareSessionManager)formatter.Deserialize(stream);
             stream.Close();
             this.components = stateManager.components;
-            this.computers = stateManager.computers;
+            this.computers  = stateManager.computers;
         }
 
         public String getReportAsString()

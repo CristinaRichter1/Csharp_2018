@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+//using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
@@ -8,6 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
+using temaCsharp.Entities;
+using temaCsharp.Util;
 
 namespace temaCsharp
 {
@@ -41,12 +44,14 @@ namespace temaCsharp
                 {
                     listBox1.Items.Add(component.Name);
                 }
+            }
 
+            if (session.platforms.Count > 0)
+            {
                 foreach (String platform in session.platforms)
                 {
                     comboBox1.Items.Add(platform);
                 }
-
             }
 
             if (session.computers.Count() > 0)

@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using temaCsharp.Entities;
+
 /*
  * Utility class that deals with validating compatibility between parts 
  * 
- */ 
-namespace temaCsharp
+ */
+namespace temaCsharp.Util
 {
     
     public class HardwareCompatibilityManager

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
  *  Represents a PC hradware component 
  * 
  */
-namespace temaCsharp
+namespace temaCsharp.Entities
 {
     [Serializable]
     public class Component

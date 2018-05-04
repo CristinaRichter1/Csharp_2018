@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.OleDb;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -55,6 +56,16 @@ namespace temaCsharp.Util
             stream.Close();
             this.components = stateManager.components;
             this.computers  = stateManager.computers;
+        }
+
+        public void saveState(OleDbConnection connection)
+        {
+
+        }
+
+        public void retrieveState(OleDbConnection connection)
+        {
+
         }
 
         public String getReportAsString()

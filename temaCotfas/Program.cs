@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.OleDb;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -52,11 +53,14 @@ namespace temaCsharp
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            String connectionString = Properties.Settings.Default.Database;
+            OleDbConnection connection = new OleDbConnection(connectionString);
+
             // Inject the retrieved session manager into the application 
             HardwareSessionManager savedSession = new HardwareSessionManager();
             try
             {
-                savedSession.retrieveState("session.bin");
+                //savedSession.retrieveState("session.bin"); // We can persist data via file-based binary serialization
             } catch (Exception e)
             {
                 // we catch exception and log it but we don't tell the user
@@ -65,8 +69,8 @@ namespace temaCsharp
 
             Form1 f = new Form1(savedSession);
             Application.Run(f);
-            // save session to file -- should allow saving to db as well for future use
-            f.session.saveState("session.bin");
+
+            //f.session.saveState("session.bin"); // we can save session to file 
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.OleDb;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,40 +10,78 @@ using temaCsharp.Entities;
 namespace temaCsharp.Models
 {
     /*
-     * 
-     * 
+     * Handles DB interaction for the app
      * 
      */
     class HardwareModel
     {
-        public static int insertComponent()
+        #region Setup singleton
+        private OleDbConnection connection;
+
+        public static HardwareModel instance = null;
+
+        private HardwareModel(OleDbConnection connection)
         {
-            return 0;
+            this.connection = connection;
         }
 
-        public static int editComponent(int ID, Component component)
+        public static HardwareModel getInstance(OleDbConnection connection)
         {
-            return 0;
+            if (HardwareModel.instance == null)
+            {
+                HardwareModel.instance = new HardwareModel(connection);
+                return HardwareModel.instance;
+            }
+            else {
+                return HardwareModel.instance;
+            }
+        }
+        #endregion Setup singleton
+
+        #region Big 4 for components
+        public List<Component> listComponents()
+        {
+            throw new NotImplementedException();
+            //return new List<Component>();
         }
 
-        public static int deleteComponent(int ID)
+        public int insertComponent()
         {
-            return 0;
+            throw new NotImplementedException();
         }
 
-        public static int insertComputer()
+        public int editComponent(int ID, Component component)
         {
-            return 0;
+            throw new NotImplementedException();
         }
 
-        public static int editComputer(int ID, Computer computer)
+        public int deleteComponent(int ID)
         {
-            return 0;
+            throw new NotImplementedException();
+        }
+        #endregion Big 4 for components
+
+        #region Big 4 for computers
+        public List<Computer> listComputers()
+        {
+            throw new NotImplementedException();
+            //return new List<Computer>();
         }
 
-        public static int deleteComputer(int ID)
+        public int insertComputer()
         {
-            return 0;
+            throw new NotImplementedException();
         }
+
+        public int editComputer(int ID, Computer computer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int deleteComputer(int ID)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion Big 4 for computers
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 //using System.ComponentModel;
 using System.Data;
+using System.Data.OleDb;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -98,7 +99,7 @@ namespace temaCsharp
             if (selectedComponent > -1)
             {
                 session.components.RemoveAt(selectedComponent);
-                listBox1.Items.RemoveAt(selectedComponent); ;
+                listBox1.Items.RemoveAt(selectedComponent);
             }
         }
 
@@ -200,8 +201,12 @@ namespace temaCsharp
 
         private void button5_Click(object sender, EventArgs e)
         {
-            int currentIndex = treeView1.Nodes.Count + 1;
-            
+            int currentIndex = 1;
+            if (session.computers.Count > 0)
+            {
+                currentIndex = session.computers.Last().ID + 1;
+            }
+
             Computer c = new Computer(currentIndex, "INTEL", new List<Component>());
             session.computers.Add(c);
             treeView1.Nodes.Add("PC " + c.ID.ToString());
@@ -292,6 +297,18 @@ namespace temaCsharp
                     stream.Close();
                     File.WriteAllText(path, report);
                 }
+            }
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                session.saveState(new OleDbConnection(Properties.Settings.Default.Database));
+                HardwareUtil.savingSuccess("You have successfully persisted application data to the database!");
+            }
+            catch (Exception x) {
+                MessageBox.Show(x.Message);
             }
         }
     }

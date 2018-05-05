@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using temaCsharp.Entities;
+using temaCsharp.Models;
 
 /*
  * Represents the `workspace` in which the app runs -- I felt the need to use 
@@ -60,12 +61,36 @@ namespace temaCsharp.Util
 
         public void saveState(OleDbConnection connection)
         {
-
+            HardwareModel hardwareModel = HardwareModel.getInstance(connection);
+            foreach (Component component in components)
+            {
+                //HardwareUtil.log(Loglevel.general, hardwareModel.componentExists(component).ToString());
+                if (!hardwareModel.componentExists(component))
+                {
+                    hardwareModel.insertComponent(component);
+                }
+                else {
+                    hardwareModel.editComponent(component);
+                }
+            }
+            foreach (Computer computer in computers)
+            {
+                //HardwareUtil.log(Loglevel.general, hardwareModel.computerExists(computer).ToString());
+                if (!hardwareModel.computerExists(computer))
+                {
+                    hardwareModel.insertComputer(computer);
+                }
+                else {
+                    hardwareModel.editComputer(computer);
+                }
+            }
         }
 
         public void retrieveState(OleDbConnection connection)
         {
-
+            HardwareModel hardwareModel = HardwareModel.getInstance(connection);
+            components = hardwareModel.listComponents();
+            computers  = hardwareModel.listComputers();
         }
 
         public String getReportAsString()

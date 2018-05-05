@@ -28,6 +28,11 @@ namespace temaCsharp.Util
             MessageBox.Show(msg, "Invalid input");
         }
 
+        public static void savingSuccess(String msg)
+        {
+            MessageBox.Show(msg, "Data succesfully saved", MessageBoxButtons.OK);
+        }
+
         public static void error(String msg)
         {
             MessageBox.Show(msg, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -57,6 +62,15 @@ namespace temaCsharp.Util
             if (items.Contains(key))
                 return true;
             return false;
+        }
+
+        // functions for interacting with treeview
+        public static TreeNode getLastNode(TreeNode subroot)
+        {
+            if (subroot.Nodes.Count == 0)
+                return subroot;
+
+            return getLastNode(subroot.Nodes[subroot.Nodes.Count - 1]);
         }
 
         public static List<int> getAddrOfNode(TreeNode tn)

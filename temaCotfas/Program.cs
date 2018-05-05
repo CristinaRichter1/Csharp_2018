@@ -60,17 +60,19 @@ namespace temaCsharp
             HardwareSessionManager savedSession = new HardwareSessionManager();
             try
             {
-                //savedSession.retrieveState("session.bin"); // We can persist data via file-based binary serialization
+                savedSession.retrieveState(connection);
+                //savedSession.retrieveState("Resources/session.bin"); // We can persist data via file-based binary serialization
             } catch (Exception e)
             {
                 // we catch exception and log it but we don't tell the user
-                HardwareUtil.log(Loglevel.error, e.StackTrace);
+                HardwareUtil.log(Loglevel.error, e.Message);
             }
 
             Form1 f = new Form1(savedSession);
             Application.Run(f);
 
             //f.session.saveState("session.bin"); // we can save session to file 
+            f.session.saveState(connection); // but also to db
         }
     }
 }

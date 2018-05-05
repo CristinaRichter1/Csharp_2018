@@ -40,7 +40,6 @@ namespace temaCsharp.Models
         }
         #endregion Setup singleton
 
-        // TODO::setup delete in database 
         public Boolean componentExists(Component component)
         {
             String sql = "SELECT COUNT(*) as aggregate FROM Components WHERE Name = @Name AND Platform = @Platform";
@@ -122,29 +121,9 @@ namespace temaCsharp.Models
             }
         }
 
-        public int editComponent(Component component)
+        public int editComponent(int ID, Component component)
         {
-            if (connection != null && connection.State == ConnectionState.Closed)
-                connection.Open();
-            try
-            {
-                String sql = "UPDATE Components SET Name = @Name, Platform = @Platform WHERE Id = @Id";
-
-                OleDbCommand command = new OleDbCommand(sql, connection);
-
-                var nameParameter = new OleDbParameter("@Name", component.Name);
-                var platformParameter = new OleDbParameter("@Platform", component.Platform);
-                var idParameter = new OleDbParameter("@Id", component.ID);
-                command.Parameters.Add(nameParameter);
-                command.Parameters.Add(platformParameter);
-                command.Parameters.Add(idParameter);
-
-                return command.ExecuteNonQuery();
-            }
-            finally
-            {
-                connection.Close();
-            }
+            throw new NotImplementedException();
         }
 
         public int deleteComponent(int ID)
@@ -261,14 +240,12 @@ namespace temaCsharp.Models
                 connection.Open();
 
             String sql = "DELETE FROM ComputerComponents WHERE ComputerId = @Id";
-            OleDbCommand command = new OleDbCommand(sql, connection);
-            OleDbParameter idParam = new OleDbParameter("@Id", computer.ID);
-            command.Parameters.Add(idParam);
+
+            OleDbParameter idParam = new OleDbParameter();
 
             // Delete relationships first
             try
             {
-                command.ExecuteNonQuery();
                 foreach (Component component in computer.getComponents())
                 {
                     int lastComponentId = component.ID;

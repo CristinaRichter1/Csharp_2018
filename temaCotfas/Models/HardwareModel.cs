@@ -160,7 +160,11 @@ namespace temaCsharp.Models
                 var idParameter = new OleDbParameter("@Id", ID);
                 command.Parameters.Add(idParameter);
 
-                return command.ExecuteNonQuery();
+                int retval = command.ExecuteNonQuery();
+
+                // remove relationship as well
+                removeComponentBelongsToComputerRelationship(ID);
+                return retval;
             } finally
             {
                 connection.Close();
@@ -329,7 +333,7 @@ namespace temaCsharp.Models
 
         #endregion get components of computer
 
-        #region add relationship
+        #region add/remove relationship
 
         public int addComponentBelongsToComputerRelationship(int ComputerId, int ComponentId)
         {
@@ -355,6 +359,25 @@ namespace temaCsharp.Models
             }
         }
 
+        public int removeComponentBelongsToComputerRelationship(int ComponentId)
+        {
+            if (connection != null && connection.State == ConnectionState.Closed)
+                connection.Open();
+
+            String sql = "DELETE FROM ComputerComponents WHERE ComponentId = @ComponentId";
+            try
+            {
+                var command = new OleDbCommand(sql, connection);
+                var ComponentIdParam = new OleDbParameter("@ComponentId", ComponentId);
+                command.Parameters.Add(ComponentIdParam);
+                
+                return command.ExecuteNonQuery();
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
         #endregion
     }
 }

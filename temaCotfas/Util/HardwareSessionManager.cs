@@ -28,10 +28,14 @@ namespace temaCsharp.Util
         [NonSerialized]
         public List<String> platforms;
 
+        [NonSerialized]
+        public List<int> componentsToDelete;
+
         public HardwareSessionManager()
         {
             computers  = new List<Computer>();
             components = new List<Component>();
+            componentsToDelete = new List<int>();
             // hardcoded for now, do not serialize
             platforms = new List<String>(){"AMD", "ARM", "INTEL", "SPARC"};
         }
@@ -83,6 +87,10 @@ namespace temaCsharp.Util
                 else {
                     hardwareModel.editComputer(computer);
                 }
+            }
+            foreach (int componentId in componentsToDelete)
+            {
+                hardwareModel.deleteComponent(componentId);
             }
         }
 

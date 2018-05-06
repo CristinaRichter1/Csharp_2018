@@ -45,6 +45,8 @@ namespace temaCsharp
                 {
                     listBox1.Items.Add(component.Name);
                 }
+                int currentIndex = session.components.Last().ID + 1;
+                textBox1.Text = currentIndex.ToString();
             }
 
             if (session.platforms.Count > 0)
@@ -98,6 +100,9 @@ namespace temaCsharp
             int selectedComponent = listBox1.SelectedIndex;
             if (selectedComponent > -1)
             {
+                int targetedId = session.components[selectedComponent].ID;
+                session.componentsToDelete.Add(targetedId);
+
                 session.components.RemoveAt(selectedComponent);
                 listBox1.Items.RemoveAt(selectedComponent);
             }
@@ -117,13 +122,14 @@ namespace temaCsharp
         {
             // Validate input
             int id;
+            int currentComponentIndex = session.components.Last().ID + 1;
             Boolean idok, nameok, platfok;
             idok = nameok = platfok = true;
             String validationMsg = "";
 
-            if (!Int32.TryParse(textBox1.Text, out id))
+            if (!Int32.TryParse(textBox1.Text, out id) && id > currentComponentIndex)
             {
-                validationMsg += "`" +id+"` is not a valid component ID.";
+                validationMsg += "`" +id + "` is not a valid component ID.";
                 idok = false;
             }
             

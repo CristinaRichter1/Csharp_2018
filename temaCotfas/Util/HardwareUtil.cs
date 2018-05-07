@@ -33,6 +33,22 @@ namespace temaCsharp.Util
             MessageBox.Show(msg, "Data succesfully saved", MessageBoxButtons.OK);
         }
 
+        public static Boolean confirmDeleteComputer(String msg)
+        {
+            DialogResult choice = MessageBox.Show(msg, "Confirm computer deletion", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Hand);
+            Boolean retval = false;
+            switch (choice) {
+                case DialogResult.Yes:
+                    retval = true;
+                    break;
+                case DialogResult.No:
+                    break;
+                case DialogResult.Cancel:
+                    break;
+            }
+            return retval;
+        }
+
         public static void error(String msg)
         {
             MessageBox.Show(msg, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);

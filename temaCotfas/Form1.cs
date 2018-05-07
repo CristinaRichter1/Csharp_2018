@@ -25,7 +25,6 @@ namespace temaCsharp
             session = new HardwareSessionManager();
             InitializeComponent();
             updateState();
-            treeView1.ExpandAll();
         }
 
         public Form1(HardwareSessionManager hsm)
@@ -34,11 +33,12 @@ namespace temaCsharp
             InitializeComponent();
             // populate everything with the proper data from state
             updateState();
-            treeView1.ExpandAll();
         }
 
         private void updateState()
         {
+            listBox1.Items.Clear();
+            treeView1.Nodes.Clear();
             if (session.components.Count > 0)
             {
                 foreach (Component component in session.components)
@@ -71,6 +71,7 @@ namespace temaCsharp
                     i++;
                 }
             }
+            treeView1.ExpandAll();
         }
 
         // Event handlers
@@ -265,16 +266,12 @@ namespace temaCsharp
                 // if we have selected a node
                 if (treeView1.SelectedNode != null)
                 {
-                    // refactor when possible
+                    // getAddrOfNode should be done better
                     List<int> ls = HardwareUtil.getAddrOfNode(treeView1.SelectedNode);
                     if (ls.Count > 1)
                     {
                         treeView1.Nodes.Remove(treeView1.SelectedNode);
                         session.computers[ls[1]].removeComponent(ls[0]);
-                    }
-                    else {
-                        treeView1.Nodes.Remove(treeView1.SelectedNode);
-                        session.computers.Remove(session.computers[ls[0]]);
                     }
                     treeView1.ExpandAll();
                 }
@@ -311,10 +308,37 @@ namespace temaCsharp
             try
             {
                 session.saveState(new OleDbConnection(Properties.Settings.Default.Database));
+                session.retrieveState(new OleDbConnection(Properties.Settings.Default.Database));
+                updateState();
                 HardwareUtil.savingSuccess("You have successfully persisted application data to the database!");
             }
             catch (Exception x) {
                 MessageBox.Show(x.Message);
+            }
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            // if we have a pc 
+            if (treeView1.Nodes.Count > 0)
+            {
+                // if we have selected a node
+                if (treeView1.SelectedNode != null)
+                {
+                    // getAddrOfNode should be done better
+                    List<int> ls = HardwareUtil.getAddrOfNode(treeView1.SelectedNode);
+                    if (
+                        ls.Count == 1 &&
+                        HardwareUtil.confirmDeleteComputer("Are you sure you want to delete this computer?")
+                        )
+                    {
+                        // Queue ID for deletion
+                        session.computersToDelete.Add(session.computers[ls[0]].ID);
+                        treeView1.Nodes.Remove(treeView1.SelectedNode);
+                        session.computers.Remove(session.computers[ls[0]]);
+                    }
+                    treeView1.ExpandAll();
+                }
             }
         }
     }

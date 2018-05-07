@@ -40,7 +40,6 @@ namespace temaCsharp.Models
         }
         #endregion Setup singleton
 
-        // TODO::setup delete in database 
         public Boolean componentExists(Component component)
         {
             String sql = "SELECT COUNT(*) as aggregate FROM Components WHERE Name = @Name AND Platform = @Platform";
@@ -212,7 +211,7 @@ namespace temaCsharp.Models
                     computers.Add(
                         new Computer((int)sqlReader["Id"], (string)sqlReader["Platform"], getComponentsOfComputerById((int)sqlReader["Id"]))
                     );
-                    HardwareUtil.log(Loglevel.general, getComponentsOfComputerById((int)sqlReader["Id"]).Count.ToString());
+                    HardwareUtil.log(Loglevel.general, "Computer with id :" + (int)sqlReader["Id"]);
                 }
                 return computers;
             }
@@ -275,6 +274,7 @@ namespace temaCsharp.Models
                 command.ExecuteNonQuery();
                 foreach (Component component in computer.getComponents())
                 {
+                    Console.WriteLine(component.ID);
                     int lastComponentId = component.ID;
                     if (!componentExists(component))
                     {
@@ -293,7 +293,27 @@ namespace temaCsharp.Models
 
         public int deleteComputer(int ID)
         {
-            throw new NotImplementedException();
+            if (connection != null && connection.State == ConnectionState.Closed)
+                connection.Open();
+            try
+            {
+                String sql = "DELETE FROM Computers WHERE Id = @Id";
+
+                OleDbCommand command = new OleDbCommand(sql, connection);
+
+                var idParameter = new OleDbParameter("@Id", ID);
+                command.Parameters.Add(idParameter);
+
+                int retval = command.ExecuteNonQuery();
+
+                // remove relationship as well
+                removeComputerHasComponentRelationship(ID);
+                return retval;
+            }
+            finally
+            {
+                connection.Close();
+            }
         }
         #endregion Big 4 for computers
 
@@ -371,6 +391,26 @@ namespace temaCsharp.Models
                 var ComponentIdParam = new OleDbParameter("@ComponentId", ComponentId);
                 command.Parameters.Add(ComponentIdParam);
                 
+                return command.ExecuteNonQuery();
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+        public int removeComputerHasComponentRelationship(int ComputerId)
+        {
+            if (connection != null && connection.State == ConnectionState.Closed)
+                connection.Open();
+
+            String sql = "DELETE FROM ComputerComponents WHERE ComputerId = @ComputerId";
+            try
+            {
+                var command = new OleDbCommand(sql, connection);
+                var ComponentIdParam = new OleDbParameter("@ComputerId", ComputerId);
+                command.Parameters.Add(ComponentIdParam);
+
                 return command.ExecuteNonQuery();
             }
             finally

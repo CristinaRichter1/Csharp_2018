@@ -29,15 +29,21 @@ namespace temaCsharp.Util
         public List<String> platforms;
 
         [NonSerialized]
+        public List<int> computersToDelete;
+
+        [NonSerialized]
         public List<int> componentsToDelete;
 
         public HardwareSessionManager()
         {
             computers  = new List<Computer>();
             components = new List<Component>();
+
+            computersToDelete  = new List<int>();
             componentsToDelete = new List<int>();
-            // hardcoded for now, do not serialize
-            platforms = new List<String>(){"AMD", "ARM", "INTEL", "SPARC"};
+
+            // hardcoded for now, * means 'any'
+            platforms = new List<String>(){"AMD", "ARM", "INTEL", "SPARC", "*"};
         }
 
         public void saveState(String filename)
@@ -91,6 +97,10 @@ namespace temaCsharp.Util
             foreach (int componentId in componentsToDelete)
             {
                 hardwareModel.deleteComponent(componentId);
+            }
+            foreach (int computerId in computersToDelete)
+            {
+                hardwareModel.deleteComputer(computerId);
             }
         }
 

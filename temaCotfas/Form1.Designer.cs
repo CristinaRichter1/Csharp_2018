@@ -44,6 +44,7 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.button7 = new System.Windows.Forms.Button();
             this.button8 = new System.Windows.Forms.Button();
+            this.button9 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -92,7 +93,7 @@
             this.groupBox1.Controls.Add(this.textBox1);
             this.groupBox1.Controls.Add(this.comboBox1);
             this.groupBox1.Controls.Add(this.textBox2);
-            this.groupBox1.Location = new System.Drawing.Point(13, 13);
+            this.groupBox1.Location = new System.Drawing.Point(13, 26);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(511, 135);
             this.groupBox1.TabIndex = 5;
@@ -152,9 +153,9 @@
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(6, 221);
+            this.button5.Location = new System.Drawing.Point(13, 440);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(108, 23);
+            this.button5.Size = new System.Drawing.Size(119, 23);
             this.button5.TabIndex = 10;
             this.button5.Text = "New PC";
             this.button5.UseVisualStyleBackColor = true;
@@ -175,10 +176,9 @@
             this.groupBox2.Controls.Add(this.button6);
             this.groupBox2.Controls.Add(this.treeView1);
             this.groupBox2.Controls.Add(this.button4);
-            this.groupBox2.Controls.Add(this.button5);
             this.groupBox2.Controls.Add(this.button3);
             this.groupBox2.Controls.Add(this.listBox1);
-            this.groupBox2.Location = new System.Drawing.Point(13, 155);
+            this.groupBox2.Location = new System.Drawing.Point(13, 168);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(511, 258);
             this.groupBox2.TabIndex = 12;
@@ -187,7 +187,7 @@
             // 
             // button7
             // 
-            this.button7.Location = new System.Drawing.Point(395, 427);
+            this.button7.Location = new System.Drawing.Point(395, 440);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(119, 23);
             this.button7.TabIndex = 13;
@@ -197,7 +197,7 @@
             // 
             // button8
             // 
-            this.button8.Location = new System.Drawing.Point(270, 427);
+            this.button8.Location = new System.Drawing.Point(270, 440);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(119, 23);
             this.button8.TabIndex = 14;
@@ -205,14 +205,26 @@
             this.button8.UseVisualStyleBackColor = true;
             this.button8.Click += new System.EventHandler(this.button8_Click);
             // 
+            // button9
+            // 
+            this.button9.Location = new System.Drawing.Point(139, 440);
+            this.button9.Name = "button9";
+            this.button9.Size = new System.Drawing.Size(115, 23);
+            this.button9.TabIndex = 15;
+            this.button9.Text = "Delete PC";
+            this.button9.UseVisualStyleBackColor = true;
+            this.button9.Click += new System.EventHandler(this.button9_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(536, 462);
+            this.ClientSize = new System.Drawing.Size(536, 477);
+            this.Controls.Add(this.button9);
             this.Controls.Add(this.button8);
             this.Controls.Add(this.button7);
             this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.button5);
             this.Controls.Add(this.groupBox2);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -244,6 +256,7 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.Button button9;
     }
 }
 

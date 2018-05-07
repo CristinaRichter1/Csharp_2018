@@ -19,8 +19,8 @@ Rules:
 Additional requirements:
 
 7. Draw a chart (don't use the chart control ;) ) in order to represent some statistics that are meaningful for your app 
-<del>8. Offer the possibility to print a document (with PrintPreview)</del>
-<del>9. Implement the drag & drop functionality</del>
+8. <del>Offer the possibility to print a document (with PrintPreview)</del>
+9. <del>Implement the drag & drop functionality</del>
 
 Rules:
 - only upload *.zip archives (no *.rar, *.bin, etc);

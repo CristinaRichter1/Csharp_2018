@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+//using System.ComponentModel;
 using System.Data;
+using System.Data.OleDb;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -9,44 +10,53 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using temaCsharp.Entities;
+using temaCsharp.Library;
+using temaCsharp.Library.Entities;
+using temaCsharp.Util;
+
 namespace temaCsharp
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         // Holds state
         public HardwareSessionManager session;
 
-        public Form1()
+        public MainForm()
         {
             session = new HardwareSessionManager();
             InitializeComponent();
             updateState();
-            treeView1.ExpandAll();
         }
 
-        public Form1(HardwareSessionManager hsm)
+        public MainForm(HardwareSessionManager hsm)
         {
             session = hsm;
             InitializeComponent();
             // populate everything with the proper data from state
             updateState();
-            treeView1.ExpandAll();
         }
 
         private void updateState()
         {
+            listBox1.Items.Clear();
+            treeView1.Nodes.Clear();
             if (session.components.Count > 0)
             {
                 foreach (Component component in session.components)
                 {
                     listBox1.Items.Add(component.Name);
                 }
+                int currentIndex = session.components.Last().ID + 1;
+                textBox1.Text = currentIndex.ToString();
+            }
 
+            if (session.platforms.Count > 0)
+            {
                 foreach (String platform in session.platforms)
                 {
                     comboBox1.Items.Add(platform);
                 }
-
             }
 
             if (session.computers.Count() > 0)
@@ -63,6 +73,7 @@ namespace temaCsharp
                     i++;
                 }
             }
+            treeView1.ExpandAll();
         }
 
         // Event handlers
@@ -84,7 +95,6 @@ namespace temaCsharp
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -92,8 +102,11 @@ namespace temaCsharp
             int selectedComponent = listBox1.SelectedIndex;
             if (selectedComponent > -1)
             {
+                int targetedId = session.components[selectedComponent].ID;
+                session.componentsToDelete.Add(targetedId);
+
                 session.components.RemoveAt(selectedComponent);
-                listBox1.Items.RemoveAt(selectedComponent); ;
+                listBox1.Items.RemoveAt(selectedComponent);
             }
         }
 
@@ -111,13 +124,14 @@ namespace temaCsharp
         {
             // Validate input
             int id;
+            int currentComponentIndex = session.components.Last().ID + 1;
             Boolean idok, nameok, platfok;
             idok = nameok = platfok = true;
             String validationMsg = "";
 
-            if (!Int32.TryParse(textBox1.Text, out id))
+            if (!Int32.TryParse(textBox1.Text, out id) && id > currentComponentIndex)
             {
-                validationMsg += "`" +id+"` is not a valid component ID.";
+                validationMsg += "`" +id + "` is not a valid component ID.";
                 idok = false;
             }
             
@@ -195,8 +209,12 @@ namespace temaCsharp
 
         private void button5_Click(object sender, EventArgs e)
         {
-            int currentIndex = treeView1.Nodes.Count + 1;
-            
+            int currentIndex = 1;
+            if (session.computers.Count > 0)
+            {
+                currentIndex = session.computers.Last().ID + 1;
+            }
+
             Computer c = new Computer(currentIndex, "INTEL", new List<Component>());
             session.computers.Add(c);
             treeView1.Nodes.Add("PC " + c.ID.ToString());
@@ -249,16 +267,12 @@ namespace temaCsharp
                 // if we have selected a node
                 if (treeView1.SelectedNode != null)
                 {
-                    // refactor when possible
+                    // getAddrOfNode should be done better
                     List<int> ls = HardwareUtil.getAddrOfNode(treeView1.SelectedNode);
                     if (ls.Count > 1)
                     {
                         treeView1.Nodes.Remove(treeView1.SelectedNode);
                         session.computers[ls[1]].removeComponent(ls[0]);
-                    }
-                    else {
-                        treeView1.Nodes.Remove(treeView1.SelectedNode);
-                        session.computers.Remove(session.computers[ls[0]]);
                     }
                     treeView1.ExpandAll();
                 }
@@ -288,6 +302,67 @@ namespace temaCsharp
                     File.WriteAllText(path, report);
                 }
             }
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                session.saveState(new OleDbConnection(Properties.Settings.Default.Database));
+                session.retrieveState(new OleDbConnection(Properties.Settings.Default.Database));
+                updateState();
+                HardwareUtil.savingSuccess("You have successfully persisted application data to the database!");
+            }
+            catch (Exception x) {
+                MessageBox.Show(x.Message);
+            }
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            // if we have a pc 
+            if (treeView1.Nodes.Count > 0)
+            {
+                // if we have selected a node
+                if (treeView1.SelectedNode != null)
+                {
+                    // getAddrOfNode should be done better
+                    List<int> ls = HardwareUtil.getAddrOfNode(treeView1.SelectedNode);
+                    if (
+                        ls.Count == 1 &&
+                        HardwareUtil.confirmDeleteComputer("Are you sure you want to delete this computer?")
+                        )
+                    {
+                        // Queue ID for deletion
+                        session.computersToDelete.Add(session.computers[ls[0]].ID);
+                        treeView1.Nodes.Remove(treeView1.SelectedNode);
+                        session.computers.Remove(session.computers[ls[0]]);
+                    }
+                    treeView1.ExpandAll();
+                }
+            }
+        }
+
+        private void pieChartControl1_Load(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void groupBox2_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pieChartControl1_Load_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            PieChartCategory[] statsFormData = HardwareUtil.getStatsAsChart(session.getPlatformShare());
+            StatsForm statsForm = new StatsForm(statsFormData);
+            statsForm.Show();
         }
     }
 }

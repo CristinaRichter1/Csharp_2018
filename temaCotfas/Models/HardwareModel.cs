@@ -1,0 +1,423 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.OleDb;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+using temaCsharp.Entities;
+using temaCsharp.Util;
+
+namespace temaCsharp.Models
+{
+    /*
+     * Handles DB interaction for the app
+     * 
+     */
+    class HardwareModel
+    {
+        #region Setup singleton
+        private OleDbConnection connection;
+
+        public static HardwareModel instance = null;
+
+        private HardwareModel(OleDbConnection connection)
+        {
+            this.connection = connection;
+        }
+
+        public static HardwareModel getInstance(OleDbConnection connection)
+        {
+            if (HardwareModel.instance == null)
+            {
+                HardwareModel.instance = new HardwareModel(connection);
+                return HardwareModel.instance;
+            }
+            else {
+                return HardwareModel.instance;
+            }
+        }
+        #endregion Setup singleton
+
+        public Boolean componentExists(Component component)
+        {
+            String sql = "SELECT COUNT(*) as aggregate FROM Components WHERE Name = @Name AND Platform = @Platform";
+
+            if (connection != null && connection.State == ConnectionState.Closed)
+                connection.Open();
+
+            var command = new OleDbCommand(sql, connection);
+            var NameParam = new OleDbParameter("@Name", component.Name);
+            var PlatformParam = new OleDbParameter("@Platform", component.Platform);
+
+            command.Parameters.Add(NameParam);
+            command.Parameters.Add(PlatformParam);
+
+            try
+            {
+                int numberOfMatches = (int)command.ExecuteScalar();
+                return (numberOfMatches > 0);
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+        #region Big 4 for components
+        public List<Component> listComponents()
+        {
+            String sql = "SELECT * FROM Components";
+            List<Component> components = new List<Component>();
+
+            if (connection != null && connection.State == ConnectionState.Closed)
+                connection.Open();
+
+            var command = new OleDbCommand(sql, connection);
+
+            OleDbDataReader sqlReader = command.ExecuteReader();
+            try
+            {
+                while (sqlReader.Read())
+                {
+                    components.Add(
+                        new Component((int)sqlReader["Id"], (string)sqlReader["Name"], (string)sqlReader["Platform"])
+                    );
+                }
+            }
+            finally
+            {
+                sqlReader.Close();
+                connection.Close();
+            }
+            return components;
+        }
+
+        public int insertComponent(Component component)
+        {
+            if (connection != null && connection.State == ConnectionState.Closed)
+                connection.Open();
+
+            String sql = "INSERT INTO Components(Name, Platform) VALUES(@Name, @Platform)";
+            try
+            {
+                var command = new OleDbCommand(sql, connection);
+
+                var nameParam = new OleDbParameter("@Name", component.Name);
+                var platformParam = new OleDbParameter("@Platform", component.Platform);
+
+                command.Parameters.Add(nameParam);
+                command.Parameters.Add(platformParam);
+
+                command.ExecuteNonQuery();
+
+                var getIdCommand = new OleDbCommand("SELECT Id FROM Components ORDER BY Id DESC;", connection);
+                int lastId = (int)getIdCommand.ExecuteScalar();
+                return lastId;
+            }
+            finally {
+                connection.Close();
+            }
+        }
+
+        public int editComponent(Component component)
+        {
+            if (connection != null && connection.State == ConnectionState.Closed)
+                connection.Open();
+            try
+            {
+                String sql = "UPDATE Components SET Name = @Name, Platform = @Platform WHERE Id = @Id";
+
+                OleDbCommand command = new OleDbCommand(sql, connection);
+
+                var nameParameter = new OleDbParameter("@Name", component.Name);
+                var platformParameter = new OleDbParameter("@Platform", component.Platform);
+                var idParameter = new OleDbParameter("@Id", component.ID);
+                command.Parameters.Add(nameParameter);
+                command.Parameters.Add(platformParameter);
+                command.Parameters.Add(idParameter);
+
+                return command.ExecuteNonQuery();
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+        public int deleteComponent(int ID)
+        {
+            if (connection != null && connection.State == ConnectionState.Closed)
+                connection.Open();
+            try
+            {
+                String sql = "DELETE FROM Components WHERE Id = @Id";
+
+                OleDbCommand command = new OleDbCommand(sql, connection);
+
+                var idParameter = new OleDbParameter("@Id", ID);
+                command.Parameters.Add(idParameter);
+
+                int retval = command.ExecuteNonQuery();
+
+                // remove relationship as well
+                removeComponentBelongsToComputerRelationship(ID);
+                return retval;
+            } finally
+            {
+                connection.Close();
+            }
+        }
+        #endregion Big 4 for components
+
+        public Boolean computerExists(Computer computer)
+        {
+            String sql = "SELECT COUNT(*) as aggregate FROM Computers WHERE Id = @Id";
+
+            if (connection != null && connection.State == ConnectionState.Closed)
+                connection.Open();
+
+            var command = new OleDbCommand(sql, connection);
+            var IdParam = new OleDbParameter("@Id", computer.ID);
+            command.Parameters.Add(IdParam);
+
+            try
+            {
+                int numberOfMatches = (int)command.ExecuteScalar();
+                return (numberOfMatches > 0);
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+        #region Big 4 for computers
+        public List<Computer> listComputers()
+        {
+            String sql = "SELECT * FROM Computers";
+            List<Computer> computers = new List<Computer>();
+            if (connection != null && connection.State == ConnectionState.Closed)
+                connection.Open();
+
+            var command = new OleDbCommand(sql, connection);
+
+            OleDbDataReader sqlReader = command.ExecuteReader();
+            try
+            {
+                while (sqlReader.Read())
+                {
+                    computers.Add(
+                        new Computer((int)sqlReader["Id"], (string)sqlReader["Platform"], getComponentsOfComputerById((int)sqlReader["Id"]))
+                    );
+                    HardwareUtil.log(LogLevel.general, "Computer with id :" + (int)sqlReader["Id"]);
+                }
+                return computers;
+            }
+            finally
+            {
+                sqlReader.Close();
+            }
+            //connection.Close();
+        }
+
+        public int insertComputer(Computer computer)
+        {
+            if (connection != null && connection.State == ConnectionState.Closed)
+                connection.Open();
+
+            String sql = "INSERT INTO Computers(Platform) VALUES(@Platform)";
+
+            try
+            {
+                var command = new OleDbCommand(sql, connection);
+                var platformParam = new OleDbParameter("@Platform", computer.Platform);
+                command.Parameters.Add(platformParam);
+                command.ExecuteNonQuery();
+
+                // We've inserted a computer, but we need to insert its components as well...
+
+                var getIdCommand = new OleDbCommand("SELECT Id FROM Computers ORDER BY Id DESC;", connection);
+                int lastComputerId = (int)getIdCommand.ExecuteScalar();
+
+                foreach (Component component in computer.getComponents())
+                {
+                    int lastComponentId = component.ID;
+                    if (!componentExists(component))
+                    {
+                        lastComponentId = insertComponent(component);
+                    }
+                    // add relationship 
+                    addComponentBelongsToComputerRelationship(lastComputerId, lastComponentId);
+                }
+                return lastComputerId;
+            }
+            finally {
+                connection.Close();
+            }
+        }
+
+        public int editComputer(Computer computer)
+        {
+            if (connection != null && connection.State == ConnectionState.Closed)
+                connection.Open();
+
+            String sql = "DELETE FROM ComputerComponents WHERE ComputerId = @Id";
+            OleDbCommand command = new OleDbCommand(sql, connection);
+            OleDbParameter idParam = new OleDbParameter("@Id", computer.ID);
+            command.Parameters.Add(idParam);
+
+            // Delete relationships first
+            try
+            {
+                command.ExecuteNonQuery();
+                foreach (Component component in computer.getComponents())
+                {
+                    Console.WriteLine(component.ID);
+                    int lastComponentId = component.ID;
+                    if (!componentExists(component))
+                    {
+                        lastComponentId = insertComponent(component);
+                    }
+                    // add relationship 
+                    addComponentBelongsToComputerRelationship(computer.ID, lastComponentId);
+                }
+                return computer.ID;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+        public int deleteComputer(int ID)
+        {
+            if (connection != null && connection.State == ConnectionState.Closed)
+                connection.Open();
+            try
+            {
+                String sql = "DELETE FROM Computers WHERE Id = @Id";
+
+                OleDbCommand command = new OleDbCommand(sql, connection);
+
+                var idParameter = new OleDbParameter("@Id", ID);
+                command.Parameters.Add(idParameter);
+
+                int retval = command.ExecuteNonQuery();
+
+                // remove relationship as well
+                removeComputerHasComponentRelationship(ID);
+                return retval;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+        #endregion Big 4 for computers
+
+        #region get components of computer
+
+        public List<Component> getComponentsOfComputerById(int ID)
+        {
+            String sql = "SELECT Components.* FROM ComputerComponents RIGHT JOIN Components ON ComputerComponents.ComponentId = Components.Id WHERE ComputerComponents.ComputerId = @Id";
+            List<Component> components = new List<Component>();
+
+            if (connection != null && connection.State == ConnectionState.Closed)
+            {
+                connection.Open();
+            }
+
+            var command = new OleDbCommand(sql, connection);
+            var idParam = new OleDbParameter("@Id", ID);
+            command.Parameters.Add(idParam);
+
+            OleDbDataReader sqlReader = command.ExecuteReader();
+            try
+            {
+                while (sqlReader.Read())
+                {
+                    components.Add(
+                        new Component((int)sqlReader["Id"], (string)sqlReader["Name"], (string)sqlReader["Platform"])
+                    );
+                }
+                return components;
+            }
+            finally
+            {
+                sqlReader.Close();
+            }
+            //connection.Close();
+        }
+
+        #endregion get components of computer
+
+        #region add/remove relationship
+
+        public int addComponentBelongsToComputerRelationship(int ComputerId, int ComponentId)
+        {
+            if (connection != null && connection.State == ConnectionState.Closed)
+                connection.Open();
+
+            String sql = "INSERT INTO ComputerComponents(ComputerId, ComponentId) VALUES(@ComputerId, @ComponentId)";
+            try
+            {
+                var command = new OleDbCommand(sql, connection);
+                var ComputerIdParam = new OleDbParameter("@ComputerId", ComputerId);
+                var ComponentIdParam = new OleDbParameter("@ComponentId", ComponentId);
+                command.Parameters.Add(ComputerIdParam);
+                command.Parameters.Add(ComponentIdParam);
+                command.ExecuteNonQuery();
+                var getIdCommand = new OleDbCommand("SELECT Id FROM ComputerComponents ORDER BY Id DESC;", connection);
+                int lastComputerComponentsId = (int)getIdCommand.ExecuteScalar();
+                // from what I understand, the finally gets executed even if I return here
+                return lastComputerComponentsId;
+            }
+            finally {
+                connection.Close();
+            }
+        }
+
+        public int removeComponentBelongsToComputerRelationship(int ComponentId)
+        {
+            if (connection != null && connection.State == ConnectionState.Closed)
+                connection.Open();
+
+            String sql = "DELETE FROM ComputerComponents WHERE ComponentId = @ComponentId";
+            try
+            {
+                var command = new OleDbCommand(sql, connection);
+                var ComponentIdParam = new OleDbParameter("@ComponentId", ComponentId);
+                command.Parameters.Add(ComponentIdParam);
+                
+                return command.ExecuteNonQuery();
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+        public int removeComputerHasComponentRelationship(int ComputerId)
+        {
+            if (connection != null && connection.State == ConnectionState.Closed)
+                connection.Open();
+
+            String sql = "DELETE FROM ComputerComponents WHERE ComputerId = @ComputerId";
+            try
+            {
+                var command = new OleDbCommand(sql, connection);
+                var ComponentIdParam = new OleDbParameter("@ComputerId", ComputerId);
+                command.Parameters.Add(ComponentIdParam);
+
+                return command.ExecuteNonQuery();
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+        #endregion
+    }
+}

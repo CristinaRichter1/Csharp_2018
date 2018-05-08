@@ -8,7 +8,7 @@ using System.Threading.Tasks;
  * Represents a computer
  * 
  */ 
-namespace temaCsharp
+namespace temaCsharp.Entities
 {
     [Serializable]
     public class Computer

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -7,6 +8,8 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using temaCsharp.Library;
+using temaCsharp.Library.Entities;
 
 /*
  * Utility/shared/helper functions go here 
@@ -14,12 +17,6 @@ using System.Windows.Forms;
  */
 namespace temaCsharp.Util
 {
-    // log levels
-    enum Loglevel {
-        general,
-        error
-    }
-
     class HardwareUtil
     {
         // common interactivity functions
@@ -112,15 +109,15 @@ namespace temaCsharp.Util
         }
 
         // logging function
-        public static void log(Loglevel level, String logText)
+        public static void log(LogLevel level, String logText)
         {
             String log = "";
             log += "DATE: " + DateTime.Now.ToString();
 
-            if (level == Loglevel.general)
+            if (level == LogLevel.general)
             {
                 log += " LEVEL: GENERAL ";
-            } else if (level == Loglevel.error)
+            } else if (level == LogLevel.error)
             {
                 log += " LEVEL: ERROR ";
             }
@@ -135,5 +132,17 @@ namespace temaCsharp.Util
             }
         }
 
+        public static PieChartCategory[] getStatsAsChart(IDictionary<String, double> platformShare)
+        {
+            PieChartCategory[] pieCategories = new PieChartCategory[platformShare.Count];
+            int i = 0;
+            Random rand = new Random();
+            foreach (var kvpair in platformShare) {
+                Color randomColor = Color.FromArgb(rand.Next(0, 256), rand.Next(0, 256), rand.Next(0, 256));
+                pieCategories[i] = new PieChartCategory(kvpair.Key, (int)Math.Round(kvpair.Value), randomColor);
+                i++;
+            }
+            return pieCategories;
+        }
     }
 }

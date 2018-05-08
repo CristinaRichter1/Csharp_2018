@@ -11,23 +11,25 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using temaCsharp.Entities;
+using temaCsharp.Library;
+using temaCsharp.Library.Entities;
 using temaCsharp.Util;
 
 namespace temaCsharp
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         // Holds state
         public HardwareSessionManager session;
 
-        public Form1()
+        public MainForm()
         {
             session = new HardwareSessionManager();
             InitializeComponent();
             updateState();
         }
 
-        public Form1(HardwareSessionManager hsm)
+        public MainForm(HardwareSessionManager hsm)
         {
             session = hsm;
             InitializeComponent();
@@ -93,7 +95,6 @@ namespace temaCsharp
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -340,6 +341,28 @@ namespace temaCsharp
                     treeView1.ExpandAll();
                 }
             }
+        }
+
+        private void pieChartControl1_Load(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void groupBox2_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pieChartControl1_Load_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            PieChartCategory[] statsFormData = HardwareUtil.getStatsAsChart(session.getPlatformShare());
+            StatsForm statsForm = new StatsForm(statsFormData);
+            statsForm.Show();
         }
     }
 }

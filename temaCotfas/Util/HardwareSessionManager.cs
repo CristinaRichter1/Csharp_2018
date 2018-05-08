@@ -111,6 +111,35 @@ namespace temaCsharp.Util
             computers  = hardwareModel.listComputers();
         }
 
+        public IDictionary<string, double> getPlatformShare()
+        {
+            // searched a lot but couldn't find something more similar to cpp's hash map
+            IDictionary<string, int> aggregates = new Dictionary<string, int>();
+            IDictionary<string, double> retval  = new Dictionary<string, double>();
+            int total = 0;
+            foreach (var platform in platforms)
+            {
+                aggregates[platform] = 0;
+            }
+            foreach (Computer computer in computers)
+            {
+                aggregates[computer.Platform]++;
+                total++;
+            }
+            foreach (Component component in components)
+            {
+                aggregates[component.Platform]++;
+                total++;
+            }
+            // get them as percents -- couldn't think of a better way
+            foreach (var aggregate in aggregates)
+            {
+                Console.WriteLine(aggregate.Key + " : " + aggregate.Value);
+                retval[aggregate.Key] = (double)aggregate.Value / (double)total * 100;
+            }
+            return retval;
+        }
+
         public String getReportAsString()
         {
             String report = "";

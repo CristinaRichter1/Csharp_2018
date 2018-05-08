@@ -211,7 +211,7 @@ namespace temaCsharp.Models
                     computers.Add(
                         new Computer((int)sqlReader["Id"], (string)sqlReader["Platform"], getComponentsOfComputerById((int)sqlReader["Id"]))
                     );
-                    HardwareUtil.log(Loglevel.general, "Computer with id :" + (int)sqlReader["Id"]);
+                    HardwareUtil.log(LogLevel.general, "Computer with id :" + (int)sqlReader["Id"]);
                 }
                 return computers;
             }

@@ -65,10 +65,10 @@ namespace temaCsharp
             } catch (Exception e)
             {
                 // we catch exception and log it but we don't tell the user
-                HardwareUtil.log(Loglevel.error, e.Message);
+                HardwareUtil.log(LogLevel.error, e.Message);
             }
 
-            Form1 f = new Form1(savedSession);
+            MainForm f = new MainForm(savedSession);
             Application.Run(f);
 
             //f.session.saveState("session.bin"); // we can save session to file 

@@ -32,5 +32,14 @@ namespace temaCsharp.Properties {
                 return ((string)(this["Database"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("./hardware.log")]
+        public string LogPath {
+            get {
+                return ((string)(this["LogPath"]));
+            }
+        }
     }
 }

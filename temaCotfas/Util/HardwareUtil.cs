@@ -124,7 +124,7 @@ namespace temaCsharp.Util
            
             log += logText;
 
-            String path = "./hardware.log";
+            String path = Properties.Settings.Default.LogPath;
 
             using (StreamWriter sw = File.AppendText(path))
             {
@@ -143,6 +143,19 @@ namespace temaCsharp.Util
                 i++;
             }
             return pieCategories;
+        }
+
+        public static String getLogsAsString()
+        {
+            String path = Properties.Settings.Default.LogPath;
+            if (File.Exists(path))
+            {
+                return File.ReadAllText(path);
+            }
+            else {
+                return "Application has not yet generated any logs.";
+            }
+            
         }
     }
 }

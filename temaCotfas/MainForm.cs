@@ -364,5 +364,18 @@ namespace temaCsharp
             StatsForm statsForm = new StatsForm(statsFormData);
             statsForm.Show();
         }
+
+        private void toolStripButton2_Click(object sender, EventArgs e)
+        {
+            String logdata = HardwareUtil.getLogsAsString();
+            LogsForm logsForm = new LogsForm(logdata);
+            logsForm.Show();
+        }
+
+        private void toolStripButton3_Click(object sender, EventArgs e)
+        {
+            AboutForm aboutForm = new AboutForm();
+            aboutForm.Show();
+        }
     }
 }

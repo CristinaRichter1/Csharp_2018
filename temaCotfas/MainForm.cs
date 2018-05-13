@@ -124,7 +124,11 @@ namespace temaCsharp
         {
             // Validate input
             int id;
-            int currentComponentIndex = session.components.Last().ID + 1;
+            int currentComponentIndex = 1;
+            if (session.components.Count > 0)
+            {
+                currentComponentIndex = session.components.Last().ID + 1;
+            }
             Boolean idok, nameok, platfok;
             idok = nameok = platfok = true;
             String validationMsg = "";

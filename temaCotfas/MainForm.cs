@@ -129,6 +129,7 @@ namespace temaCsharp
             {
                 currentComponentIndex = session.components.Last().ID + 1;
             }
+
             Boolean idok, nameok, platfok;
             idok = nameok = platfok = true;
             String validationMsg = "";
@@ -310,6 +311,7 @@ namespace temaCsharp
 
         private void button7_Click(object sender, EventArgs e)
         {
+            // TODO:: deal with situation in which an OleDb driver is not present on pc
             try
             {
                 session.saveState(new OleDbConnection(Properties.Settings.Default.Database));

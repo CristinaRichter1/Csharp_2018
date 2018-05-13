@@ -131,10 +131,11 @@ namespace temaCsharp.Util
                 aggregates[component.Platform]++;
                 total++;
             }
-            // get them as percents -- couldn't think of a better way
+
+            // get them as percents -- couldn't think of a better way 
+            if (total == 0) total = 1; // seems that c# is very happy to divide by 0 and give me garbage ;)
             foreach (var aggregate in aggregates)
             {
-                Console.WriteLine(aggregate.Key + " : " + aggregate.Value);
                 retval[aggregate.Key] = (double)aggregate.Value / (double)total * 100;
             }
             return retval;

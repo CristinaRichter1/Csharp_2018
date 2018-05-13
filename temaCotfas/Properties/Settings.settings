@@ -8,5 +8,8 @@
     <Setting Name="LogPath" Type="System.String" Scope="Application">
       <Value Profile="(Default)">./hardware.log</Value>
     </Setting>
+    <Setting Name="SessionFile" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Resources/session.bin</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

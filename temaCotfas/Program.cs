@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.OleDb;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -19,21 +21,22 @@ using temaCsharp.Util;
  *                        - add components to a computer
  *                        
  * PHASE I:
- * 1. Declare / implement the entities (classes)
- * 2. Create forms that allow users to input data
- * 3. Add data validation (ErrorProvider control, Validating/Validated events, standard exceptions, custom exceptions)
+ * 1. Declare / implement the entities (classes) --ok
+ * 2. Create forms that allow users to input data --ok
+ * 3. Add data validation (ErrorProvider control, Validating/Validated events, standard exceptions, custom exceptions)--ok
  * 5. Implement Alt Shortcuts
- * 4. Add data serialization / deserialization
- * 5. Add the option to export a report as a txt file
- * 6. Use the various menu controls (MenuStrip, ToolStrip, StatusStrip, ContextMenuStrip)
+ * 4. Add data serialization / deserialization --ok
+ * 5. Add the option to export a report as a txt file --ok
+ * 6. Use the various menu controls (MenuStrip, ToolStrip, StatusStrip, ContextMenuStrip) --ok
  *
  * PHASE II:
- * 7. Draw a chart (don't use the chart control ;) ) in order to represent some statistics that are meaningful for your app 
- * 8. Offer the possibility to print a document (with PrintPreview)
- * 9. Implement the drag & drop functionality
+ * 7. Draw a chart (don't use the chart control ;) ) in order to represent some statistics that are meaningful for
+ *    your app --ok 
+ * 8. (X)Offer the possibility to print a document (with PrintPreview)
+ * 9. (X)Implement the drag & drop functionality
  * 
  * PHASE III:
- * 10. Use a relational database in order to persist data (for at least two different entities / classes) in your app
+ * 10. Use a relational database in order to persist data (for at least two different entities / classes) in your app --ok
  * 11. Implement a UserControl (so that it can be distributed to other developers) in a separate project and use it in your 
  * app. The UserControl should provide a useful functionality for your app (please don't copy&paste a clock usercontrol from 
  * the internet ;) )
@@ -54,25 +57,45 @@ namespace temaCsharp
             Application.SetCompatibleTextRenderingDefault(false);
 
             String connectionString = Properties.Settings.Default.Database;
-            OleDbConnection connection = new OleDbConnection(connectionString);
+            String sessionFile      = Properties.Settings.Default.SessionFile;
+            OleDbConnection connection = null;
+            try
+            {
+                connection = new OleDbConnection(connectionString);
+            }
+            catch (Exception e) {
+                HardwareUtil.log(LogLevel.error, e.Message);
+            }
 
-            // Inject the retrieved session manager into the application 
+            // Inject the retrieved session manager into the application and try to read from ms access db
             HardwareSessionManager savedSession = new HardwareSessionManager();
             try
             {
                 savedSession.retrieveState(connection);
-                //savedSession.retrieveState("Resources/session.bin"); // We can persist data via file-based binary serialization
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 // we catch exception and log it but we don't tell the user
                 HardwareUtil.log(LogLevel.error, e.Message);
+                // and fall back to using file based persistence
+                if(File.Exists(sessionFile))
+                    savedSession.retrieveState(sessionFile);
             }
 
+            // we run the app
             MainForm f = new MainForm(savedSession);
             Application.Run(f);
 
-            //f.session.saveState("session.bin"); // we can save session to file 
-            f.session.saveState(connection); // but also to db
+            // try to save changes to db
+            try
+            {
+                f.session.saveState(connection); 
+            }
+            catch (Exception e) {
+                // if that fails write to file and log error
+                HardwareUtil.log(LogLevel.error, e.Message);
+                f.session.saveState(sessionFile);
+            }
         }
     }
 }

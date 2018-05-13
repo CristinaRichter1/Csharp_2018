@@ -41,5 +41,14 @@ namespace temaCsharp.Properties {
                 return ((string)(this["LogPath"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Resources/session.bin")]
+        public string SessionFile {
+            get {
+                return ((string)(this["SessionFile"]));
+            }
+        }
     }
 }

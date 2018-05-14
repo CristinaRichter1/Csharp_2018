@@ -1,6 +1,6 @@
 ﻿namespace temaCsharp
 {
-    partial class AboutForm
+    partial class LoginForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,52 +28,35 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.loginUserControl1 = new LoginUserControl.LoginUserControl();
             this.SuspendLayout();
-            // 
-            // richTextBox1
-            // 
-            this.richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.richTextBox1.Cursor = System.Windows.Forms.Cursors.Default;
-            this.richTextBox1.Location = new System.Drawing.Point(12, 14);
-            this.richTextBox1.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.ReadOnly = true;
-            this.richTextBox1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.richTextBox1.Size = new System.Drawing.Size(260, 160);
-            this.richTextBox1.TabIndex = 0;
-            this.richTextBox1.Text = "";
-            this.richTextBox1.TextChanged += new System.EventHandler(this.richTextBox1_TextChanged_1);
             // 
             // loginUserControl1
             // 
             this.loginUserControl1.isLoggedIn = false;
-            this.loginUserControl1.Location = new System.Drawing.Point(0, -1);
+            this.loginUserControl1.Location = new System.Drawing.Point(12, 8);
             this.loginUserControl1.Name = "loginUserControl1";
-            this.loginUserControl1.Size = new System.Drawing.Size(334, 175);
-            this.loginUserControl1.TabIndex = 1;
+            this.loginUserControl1.Size = new System.Drawing.Size(322, 161);
+            this.loginUserControl1.TabIndex = 0;
+            
             // 
-            // AboutForm
+            // LoginForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(327, 164);
+            this.ClientSize = new System.Drawing.Size(349, 181);
             this.Controls.Add(this.loginUserControl1);
-            this.Controls.Add(this.richTextBox1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
-            this.Name = "AboutForm";
+            this.MinimizeBox = false;
+            this.Name = "LoginForm";
             this.ShowIcon = false;
-            this.Text = "About";
-            this.Load += new System.EventHandler(this.AboutForm_Load);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.RichTextBox richTextBox1;
         private LoginUserControl.LoginUserControl loginUserControl1;
     }
 }

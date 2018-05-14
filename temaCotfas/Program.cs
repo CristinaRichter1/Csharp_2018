@@ -56,6 +56,15 @@ namespace temaCsharp
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            // First log in
+
+            LoginForm lf = new LoginForm();
+            if (lf.ShowDialog() != DialogResult.OK)
+            {
+                Environment.Exit(-1);
+            }
+
+
             String connectionString = Properties.Settings.Default.Database;
             String sessionFile      = Properties.Settings.Default.SessionFile;
             OleDbConnection connection = null;

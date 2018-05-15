@@ -15,28 +15,24 @@ using temaCsharp.Util;
  * Componente        - Component
  * Compatibilitati   - Compatibility
  * Calculatoare      - Computer
- * 
- * Possible user actions: - create a component
- *                        - check compatibility between 2 components or a component and computer
- *                        - add components to a computer
  *                        
  * PHASE I:
- * 1. Declare / implement the entities (classes) --ok
- * 2. Create forms that allow users to input data --ok
- * 3. Add data validation (ErrorProvider control, Validating/Validated events, standard exceptions, custom exceptions)--ok
+ * 1. Declare / implement the entities (classes)
+ * 2. Create forms that allow users to input data
+ * 3. Add data validation (ErrorProvider control, Validating/Validated events, standard exceptions, custom exceptions)
  * 5. Implement Alt Shortcuts
- * 4. Add data serialization / deserialization --ok
- * 5. Add the option to export a report as a txt file --ok
- * 6. Use the various menu controls (MenuStrip, ToolStrip, StatusStrip, ContextMenuStrip) --ok
+ * 4. Add data serialization / deserialization
+ * 5. Add the option to export a report as a txt file
+ * 6. Use the various menu controls (MenuStrip, ToolStrip, StatusStrip, ContextMenuStrip)
  *
  * PHASE II:
  * 7. Draw a chart (don't use the chart control ;) ) in order to represent some statistics that are meaningful for
- *    your app --ok 
+ *    your app
  * 8. (X)Offer the possibility to print a document (with PrintPreview)
  * 9. (X)Implement the drag & drop functionality
  * 
  * PHASE III:
- * 10. Use a relational database in order to persist data (for at least two different entities / classes) in your app --ok
+ * 10. Use a relational database in order to persist data (for at least two different entities / classes) in your app
  * 11. Implement a UserControl (so that it can be distributed to other developers) in a separate project and use it in your 
  * app. The UserControl should provide a useful functionality for your app (please don't copy&paste a clock usercontrol from 
  * the internet ;) )
@@ -57,9 +53,8 @@ namespace temaCsharp
             Application.SetCompatibleTextRenderingDefault(false);
 
             // First log in
-
             LoginForm lf = new LoginForm();
-            if (lf.ShowDialog() != DialogResult.OK)
+            if (!lf.isLoginSuccess())
             {
                 Environment.Exit(-1);
             }

@@ -9,6 +9,11 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using temaCsharp.Library.Entities;
 
+
+/**
+ * Shows platform usage share via a custom pie chart 
+ * 
+ */ 
 namespace temaCsharp
 {
     public partial class StatsForm : Form

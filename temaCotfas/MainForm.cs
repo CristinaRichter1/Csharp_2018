@@ -37,6 +37,10 @@ namespace temaCsharp
             updateState();
         }
 
+        /**
+         * Renders data from the state manager to the form components
+         *
+         */ 
         private void updateState()
         {
             listBox1.Items.Clear();
@@ -80,23 +84,25 @@ namespace temaCsharp
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-
         }
 
         private void listBox1_SelectedIndexChanged_1(object sender, EventArgs e)
         {
-            
         }
 
         private void groupBox1_Enter(object sender, EventArgs e)
         {
-
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
         }
 
+        /**
+         * 
+         * Deletes a component and marks it for deletion from db
+         * 
+         */ 
         private void button2_Click(object sender, EventArgs e)
         {
             int selectedComponent = listBox1.SelectedIndex;
@@ -120,6 +126,10 @@ namespace temaCsharp
             
         }
 
+        /**
+         * Adds a component to the list view
+         * 
+         */
         private void button1_Click(object sender, EventArgs e)
         {
             // Validate input
@@ -178,14 +188,16 @@ namespace temaCsharp
 
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
-
         }
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
-        {
-            
+        {  
         }
 
+        /**
+         * Tests the compatibility of 2 components or a component and a PC
+         * 
+         */ 
         private void button3_Click(object sender, EventArgs e)
         {
             // if we have a pc 
@@ -212,6 +224,10 @@ namespace temaCsharp
             }
         }
 
+        /**
+         * Creates a new PC in the tree view
+         * 
+         */ 
         private void button5_Click(object sender, EventArgs e)
         {
             int currentIndex = 1;
@@ -226,6 +242,10 @@ namespace temaCsharp
             treeView1.ExpandAll();
         }
 
+        /**
+         * Adds the component to the selected PC
+         * 
+         */ 
         private void button4_Click(object sender, EventArgs e)
         {
             // if we have a pc 
@@ -264,6 +284,10 @@ namespace temaCsharp
             }
         }
 
+        /**
+         * Removes the component from its parent PC
+         * 
+         */ 
         private void button6_Click(object sender, EventArgs e)
         {
             // if we have a pc 
@@ -284,11 +308,16 @@ namespace temaCsharp
             }
         }
 
+        /**
+         * Opens a file save dialog and saves a report formatted as a text file
+         * 
+         */ 
         private void button8_Click(object sender, EventArgs e)
         {
             Stream stream;
             SaveFileDialog sfd = new SaveFileDialog();
 
+            // show other files in directory; by default the file will be called report.txt
             sfd.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
             sfd.FilterIndex = 1;
             sfd.RestoreDirectory = true;
@@ -309,13 +338,18 @@ namespace temaCsharp
             }
         }
 
+        /**
+         * 
+         * Writes state to the db --should ideally also contain a fallback to file-based serialisation
+         */ 
         private void button7_Click(object sender, EventArgs e)
         {
             // TODO:: deal with situation in which an OleDb driver is not present on pc
             try
             {
-                session.saveState(new OleDbConnection(Properties.Settings.Default.Database));
-                session.retrieveState(new OleDbConnection(Properties.Settings.Default.Database));
+                var connectionString = Properties.Settings.Default.Database;
+                session.saveState(new OleDbConnection(connectionString));
+                session.retrieveState(new OleDbConnection(connectionString));
                 updateState();
                 HardwareUtil.savingSuccess("You have successfully persisted application data to the database!");
             }
@@ -324,6 +358,10 @@ namespace temaCsharp
             }
         }
 
+        /**
+         * Deletes a PC from the session and marks it for deletion from the db
+         * 
+         */ 
         private void button9_Click(object sender, EventArgs e)
         {
             // if we have a pc 

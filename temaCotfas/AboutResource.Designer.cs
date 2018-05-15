@@ -66,12 +66,20 @@ namespace temaCsharp {
         ///Version: 1.0.0
         ///Author: Erik Kovacs
         ///Contact:
-        ///kovaroberik@gmail.com
-        ///https://github.com/codepadawan93.
+        ///kovaroberik@gmail.com.
         /// </summary>
         internal static string About {
             get {
                 return ResourceManager.GetString("About", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://github.com/codepadawan93.
+        /// </summary>
+        internal static string GitLink {
+            get {
+                return ResourceManager.GetString("GitLink", resourceCulture);
             }
         }
     }

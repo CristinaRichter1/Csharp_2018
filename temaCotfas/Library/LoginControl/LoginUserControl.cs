@@ -21,6 +21,8 @@ namespace LoginUserControl
         {
             InitializeComponent();
             loginCount = 0;
+            isLoggedIn = false;
+            button1.DialogResult = DialogResult.Cancel;
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -49,14 +51,11 @@ namespace LoginUserControl
             if (verifyCredentials(userName, password))
             {
                 isLoggedIn = true;
-                button1.DialogResult = DialogResult.OK;
             }
             else
             {
                 MessageBox.Show("Incorrect credentials!", "Login error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                isLoggedIn = false;
                 loginCount++;
-                button1.DialogResult = DialogResult.Cancel;
             }
         }
 

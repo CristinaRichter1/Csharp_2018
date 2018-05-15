@@ -28,39 +28,34 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.loginUserControl1 = new LoginUserControl.LoginUserControl();
+            this.label1 = new System.Windows.Forms.Label();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
             // 
-            // richTextBox1
+            // label1
             // 
-            this.richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.richTextBox1.Cursor = System.Windows.Forms.Cursors.Default;
-            this.richTextBox1.Location = new System.Drawing.Point(12, 14);
-            this.richTextBox1.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.ReadOnly = true;
-            this.richTextBox1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.richTextBox1.Size = new System.Drawing.Size(260, 160);
-            this.richTextBox1.TabIndex = 0;
-            this.richTextBox1.Text = "";
-            this.richTextBox1.TextChanged += new System.EventHandler(this.richTextBox1_TextChanged_1);
+            this.label1.Location = new System.Drawing.Point(13, 13);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(257, 101);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "label1";
             // 
-            // loginUserControl1
+            // linkLabel1
             // 
-            this.loginUserControl1.isLoggedIn = false;
-            this.loginUserControl1.Location = new System.Drawing.Point(0, -1);
-            this.loginUserControl1.Name = "loginUserControl1";
-            this.loginUserControl1.Size = new System.Drawing.Size(334, 175);
-            this.loginUserControl1.TabIndex = 1;
+            this.linkLabel1.Location = new System.Drawing.Point(12, 114);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(254, 23);
+            this.linkLabel1.TabIndex = 2;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "linkLabel1";
             // 
             // AboutForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(327, 164);
-            this.Controls.Add(this.loginUserControl1);
-            this.Controls.Add(this.richTextBox1);
+            this.ClientSize = new System.Drawing.Size(282, 164);
+            this.Controls.Add(this.linkLabel1);
+            this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "AboutForm";
@@ -72,8 +67,7 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.RichTextBox richTextBox1;
-        private LoginUserControl.LoginUserControl loginUserControl1;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.LinkLabel linkLabel1;
     }
 }

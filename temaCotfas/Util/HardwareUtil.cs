@@ -25,6 +25,11 @@ namespace temaCsharp.Util
             MessageBox.Show(msg, "Invalid input");
         }
 
+        public static void showDefaultCredentials(String msg)
+        {
+            MessageBox.Show(msg, "Default Credentials", MessageBoxButtons.OK);
+        }
+
         public static void savingSuccess(String msg)
         {
             MessageBox.Show(msg, "Data succesfully saved", MessageBoxButtons.OK);
@@ -132,6 +137,10 @@ namespace temaCsharp.Util
             }
         }
 
+        /**
+         * Transforms platform share data into an array that can be passed into the custom user control, with random colours assigned each time
+         * 
+         */ 
         public static PieChartCategory[] getStatsAsChart(IDictionary<String, double> platformShare)
         {
             PieChartCategory[] pieCategories = new PieChartCategory[platformShare.Count];
@@ -145,6 +154,10 @@ namespace temaCsharp.Util
             return pieCategories;
         }
 
+        /**
+         * Retrieves data from the log file
+         * 
+         */ 
         public static String getLogsAsString()
         {
             String path = Properties.Settings.Default.LogPath;

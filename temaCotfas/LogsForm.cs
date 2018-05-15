@@ -8,6 +8,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+/**
+ * Shows the logged error/warning data 
+ * 
+ */ 
 namespace temaCsharp
 {
     public partial class LogsForm : Form
@@ -27,7 +31,6 @@ namespace temaCsharp
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            
         }
     }
 }

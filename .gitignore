@@ -1,3 +1,4 @@
-temaCotfas/bin/*
-temaCOtfas/obj/*
+temaCsharp/bin/*
+temaCsharp/obj/*
 .vs/temaCsharp/v14/*
+temaCsharp.sln__
